@@ -1,5 +1,6 @@
 import { legacy_createStore as createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
+import logger from 'redux-logger'
 import { asyncIncrement, decrement, increment } from './redux/actions'
 import { rootReducer } from './redux/rootReducer'
 import './styles.css'
@@ -10,15 +11,15 @@ const subBtn = document.getElementById("sub")
 const asyncBtn = document.getElementById("async")
 const themeBtn = document.getElementById("theme")
 
-function logger(state) {
-  return function (next) {
-    return function (action) {
-      console.log("State", state.getState());
-      console.log("Action", action);
-      return next(action)
-    }
-  }
-}
+// function logger(state) {
+//   return function (next) {
+//     return function (action) {
+//       console.log("State", state.getState());
+//       console.log("Action", action);
+//       return next(action)
+//     }
+//   }
+// }
 
 const store = createStore(
   rootReducer, 
