@@ -1,3 +1,5 @@
+import { createStore } from './createStore'
+import { rootReducer } from './redux/rootReducer'
 import './styles.css'
 
 const counter = document.getElementById("counter")
@@ -6,43 +8,28 @@ const subBtn = document.getElementById("sub")
 const asyncBtn = document.getElementById("async")
 const themeBtn = document.getElementById("theme")
 
-console.log(localStorage.getItem('stateSession'));
-let state
-if (localStorage.getItem('stateSession') == null) {
-  state = 0
-} else {
-  state = localStorage.getItem('stateSession')
-
-}
-
-
-function render() {
-  counter.textContent = state.toString()
-}
+const store = createStore(rootReducer, 0)
 
 addBtn.addEventListener("click", () => {
-  state++
-  render()
-  console.log(state);
+  store.dispatch({ type: "INCREMENT" })
 })
 
 subBtn.addEventListener("click", () => {
-  state--
-  render()
+  store.dispatch({ type: "DECREMENT" })
 })
 
 asyncBtn.addEventListener("click", () => {
-  setTimeout(() => {
-    state++
-    render()
-  }, 2000)
+
 })
 
 themeBtn.addEventListener("click", () => {
-  document.body.classList.toggle('dark');
+  // document.body.classList.toggle('dark');
 })
 
+store.subscribe(() => {
+  const state = store.getState()
 
-localStorage.setItem('stateSession', state)
-// localStorage.clear()
-render()
+  counter.textContent = state
+})
+
+store.dispatch({ type: "INIT_APPLICATION" })
