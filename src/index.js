@@ -1,4 +1,4 @@
-import { legacy_createStore as createStore, applyMiddleware } from 'redux'
+import { legacy_createStore as createStore, applyMiddleware, compose  } from 'redux'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 import { asyncIncrement, changeTheme, decrement, increment } from './redux/actions'
@@ -23,7 +23,10 @@ const themeBtn = document.getElementById("theme")
 
 const store = createStore(
   rootReducer,
-  applyMiddleware(thunk, logger)
+  compose(
+    applyMiddleware(thunk, logger),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
 )
 
 addBtn.addEventListener("click", () => {
