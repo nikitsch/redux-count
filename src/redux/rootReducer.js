@@ -7,7 +7,13 @@ function counterReducer(state = 0, action) {
     return state + 1
   } else if (action.type === DECREMENT) {
     return state - 1
-  }
+  } else if (action.type === "INIT_STATE") {
+    return action.payload
+  } else if (action.type === "SAVE_STATE") {
+    sessionStorage.setItem("sessionState", state)
+    return state
+  } 
+
 
   return state
 }

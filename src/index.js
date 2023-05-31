@@ -1,4 +1,4 @@
-import { legacy_createStore as createStore, applyMiddleware, compose  } from 'redux'
+import { legacy_createStore as createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 import { asyncIncrement, changeTheme, decrement, increment } from './redux/actions'
@@ -57,4 +57,12 @@ store.subscribe(() => {
   document.querySelector(".card").querySelectorAll(".btn").forEach(btn => btn.disabled = state.theme.disabled);
 })
 
-store.dispatch({ type: "INIT_APPLICATION" })
+// store.dispatch({ type: "INIT_APPLICATION" })
+
+window.addEventListener("DOMContentLoaded", () => {
+  store.dispatch({ type: "INIT_STATE", payload: sessionStorage.getItem("sessionState") || 0 })
+})
+
+window.addEventListener("unload", () => {
+  store.dispatch({ type: "SAVE_STATE" })
+})
