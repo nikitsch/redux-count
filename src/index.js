@@ -10,7 +10,21 @@ const subBtn = document.getElementById("sub")
 const asyncBtn = document.getElementById("async")
 const themeBtn = document.getElementById("theme")
 
-const store = createStore(rootReducer, 0, applyMiddleware(thunk))
+function logger(state) {
+  return function (next) {
+    return function (action) {
+      console.log("State", state.getState());
+      console.log("Action", action);
+      return next(action)
+    }
+  }
+}
+
+const store = createStore(
+  rootReducer, 
+  0, 
+  applyMiddleware(thunk, logger)
+  )
 
 addBtn.addEventListener("click", () => {
   store.dispatch(increment())
