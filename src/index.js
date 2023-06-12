@@ -1,4 +1,4 @@
-import { legacy_createStore as createStore, applyMiddleware } from 'redux'
+import { legacy_createStore as createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 import { asyncIncrement, changeTheme, decrement, increment } from './redux/actions'
@@ -23,7 +23,10 @@ const themeBtn = document.getElementById("theme")
 
 const store = createStore(
   rootReducer,
-  applyMiddleware(thunk, logger)
+  compose(
+    applyMiddleware(thunk, logger),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
 )
 
 addBtn.addEventListener("click", () => {
@@ -49,7 +52,17 @@ store.subscribe(() => {
   const state = store.getState()
 
   counter.textContent = state.counter
-  document.body.className = state.theme.value
+  document.body.className = state.theme.value;
+
+  document.querySelector(".card").querySelectorAll(".btn").forEach(btn => btn.disabled = state.theme.disabled);
 })
 
-store.dispatch({ type: "INIT_APPLICATION" })
+// store.dispatch({ type: "INIT_APPLICATION" })
+
+window.addEventListener("DOMContentLoaded", () => {
+  store.dispatch({ type: "INIT_STATE", payload: sessionStorage.getItem("sessionState") || 0 })
+})
+
+window.addEventListener("unload", () => {
+  store.dispatch({ type: "SAVE_STATE" })
+})
